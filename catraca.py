@@ -1,19 +1,9 @@
 import serial
 import time
-import pyodbc
+from verifica import verificar_usuario, fechar_conexao, cursor, conn  # Importa a função verificar_usuario e fechar_conexao
 
 # Configura a porta serial (substitua 'COM3' pela porta correta)
 ser = serial.Serial('COM3', 9600, timeout=1)
-
-# Configura a conexão com o banco de dados MS SQL
-conn = pyodbc.connect(
-    'DRIVER={SQL Server};'
-    'SERVER=DESKTOP-SUHMG7B;'
-    'DATABASE=PythonSQL;'
-)
-print("Conexão estabelecida com sucesso!")
-
-cursor = conn.cursor()
 
 def registrar_evento(evento, usuario):
     timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -34,12 +24,7 @@ def fechar_catraca(usuario):
     registrar_evento('FECHAR', usuario)
     return resposta
 
-def verificar_usuario(usuario):
-    cursor.execute("SELECT COUNT(*) FROM Usuarios WHERE Nome = ?", (usuario,))
-    result = cursor.fetchone()
-    return result[0] > 0
-
- #Solicita o nome do usuário
+# Solicita o nome do usuário
 usuario = input("Digite seu nome de usuário: ")
 
 if verificar_usuario(usuario):
@@ -53,6 +38,6 @@ if verificar_usuario(usuario):
 else:
     print("Usuário não encontrado. Acesso negado.")
 
- # Fecha a conexão serial e a conexão com o banco de dados
+# Fecha a conexão serial e a conexão com o banco de dados
 ser.close()
-conn.close()
+fechar_conexao()

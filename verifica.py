@@ -1,6 +1,6 @@
 import pyodbc
 
-#Conecta Banco de daods 
+# Conecta Banco de dados 
 conn = pyodbc.connect(
     'DRIVER={SQL Server};'
     'SERVER=DESKTOP-SUHMG7B;'
@@ -10,11 +10,15 @@ print("Conexão estabelecida com sucesso!")
 
 cursor = conn.cursor()
 
-#Função para registra nome usuário
+# Função para verificar nome do usuário
 def verificar_usuario(usuario):
     cursor.execute("SELECT COUNT(*) FROM Usuarios WHERE Nome = ?", (usuario,))
     result = cursor.fetchone()
     return result[0] > 0
+
+# Fecha a conexão com o banco de dados
+def fechar_conexao():
+    conn.close()
 
 usuario = input("Digite seu nome de usuário: ")
 
